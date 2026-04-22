@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DelChain Test Game | Powered by Scientific Nexus</title>
+    
+    <meta name="syrpts-verification" content="PASTE_YOUR_VERIFICATION_KEY_HERE">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --cyan: #00f2ff;
+            --cyan-glow: rgba(0, 242, 255, 0.4);
+            --dark: #050507;
+            --panel-bg: rgba(20, 20, 28, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at center, #111118 0%, var(--dark) 100%);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--panel-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 20px var(--cyan-dim);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--cyan);
+            text-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            color: #888;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--glass-border);
+            color: var(--cyan);
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+        .btn {
+            width: 100%;
+            background: transparent;
+            color: var(--cyan);
+            border: 1px solid var(--cyan);
+            padding: 12px;
+            font-size: 16px;
+            font-family: 'Share Tech Mono', monospace;
+            text-transform: uppercase;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: var(--cyan);
+            color: var(--dark);
+            box-shadow: 0 0 15px var(--cyan-glow);
+        }
+
+        .hud-panel {
+            display: none;
+            background: rgba(0, 242, 255, 0.05);
+            border: 1px dashed var(--cyan);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .hud-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+            padding-bottom: 15px;
+        }
+
+        .hud-stats h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .balance-display {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 24px;
+            color: var(--cyan);
+            text-shadow: 0 0 8px var(--cyan-glow);
+        }
+
+        .store-item {
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .store-info h3 {
+            margin: 0 0 5px 0;
+            color: #fff;
+        }
+
+        .store-info p {
+            margin: 0;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .buy-btn {
+            background: var(--cyan);
+            color: var(--dark);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logs {
+            margin-top: 20px;
+            background: #000;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+            color: #00ff00;
+            height: 100px;
+            overflow-y: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <div class="header">
+        <h1><i class="fas fa-gamepad"></i> Neon Assault</h1>
+        <p>DelChain Third-Party Integration Sandbox</p>
+    </div>
+
+    <div class="input-group">
+        <label>DataChain Node URL</label>
+        <input type="text" id="node-url" value="https://your-railway-app-url.up.railway.app" placeholder="https://...">
+    </div>
+
+    <div class="input-group">
+        <label>Custom Ticker (Minted via DelChain)</label>
+        <input type="text" id="token-ticker" value="GAMETOKEN" placeholder="e.g. GAMETOKEN">
+    </div>
+
+    <div class="input-group">
+        <label>Player Wallet Address (nx_...)</label>
+        <input type="text" id="player-wallet" placeholder="nx_...">
+    </div>
+
+    <button class="btn" id="connect-btn" onclick="connectToDataChain()"><i class="fas fa-link"></i> Connect & Fetch Balance</button>
+
+    <div class="hud-panel" id="hud-panel">
+        <div class="hud-stats">
+            <h2>Player Inventory</h2>
+            <div class="balance-display" id="balance-display">0.00</div>
+        </div>
+
+        <div class="store-item">
+            <div class="store-info">
+                <h3><i class="fas fa-khanda"></i> Plasma Sword</h3>
+                <p>Cost: <span id="item-cost">50</span> <span class="ticker-label">TOKEN</span></p>
+            </div>
+            <button class="buy-btn" onclick="purchaseItem()">Purchase</button>
+        </div>
+    </div>
+
+    <div class="logs" id="sys-logs">
+        [System] Sandbox initialized. Awaiting API connection...<br>
+    </div>
+</div>
+
+<script>
+    function log(message, isError = false) {
+        const logs = document.getElementById('sys-logs');
+        const color = isError ? '#ff4444' : '#00ff88';
+        const time = new Date().toLocaleTimeString();
+        logs.innerHTML += `<span style="color: #666">[${time}]</span> <span style="color: ${color}">${message}</span><br>`;
+        logs.scrollTop = logs.scrollHeight;
+    }
+
+    async function connectToDataChain() {
+        const nodeUrl = document.getElementById('node-url').value.trim();
+        const ticker = document.getElementById('token-ticker').value.trim().toUpperCase();
+        const wallet = document.getElementById('player-wallet').value.trim();
+
+        if (!nodeUrl || !ticker || !wallet) {
+            return log("Error: Please fill in all configuration fields.", true);
+        }
+
+        log(`Attempting to connect to ${nodeUrl}...`);
+        log(`Fetching balance for ${wallet} [${ticker}]...`);
+
+        try {
+            document.getElementById('connect-btn').innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Connecting...';
+            
+            // CALLING YOUR DATACHAIN API TO FETCH THE CUSTOM TOKEN
+            const response = await fetch(`${nodeUrl}/balance/${wallet}?token=${ticker}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                log(`Success! Fetched ${data.balance} ${ticker}`);
+                
+                // Update Game UI
+                document.getElementById('hud-panel').style.display = 'block';
+                document.getElementById('balance-display').innerText = data.balance.toFixed(2) + ' ' + ticker;
+                document.querySelectorAll('.ticker-label').forEach(el => el.innerText = ticker);
+                
+                document.getElementById('connect-btn').innerHTML = '<i class="fas fa-check"></i> Connected';
+                document.getElementById('connect-btn').style.borderColor = 'var(--success)';
+                document.getElementById('connect-btn').style.color = 'var(--success)';
+            } else {
+                log(`API Error: ${data.error || 'Failed to fetch balance.'}`, true);
+                document.getElementById('connect-btn').innerHTML = '<i class="fas fa-link"></i> Retry Connection';
+            }
+        } catch (error) {
+            log(`Network Error: ${error.message}. Is your Railway node online?`, true);
+            document.getElementById('connect-btn').innerHTML = '<i class="fas fa-link"></i> Retry Connection';
+        }
+    }
+
+    function purchaseItem() {
+        const ticker = document.getElementById('token-ticker').value.trim().toUpperCase();
+        const cost = 50;
+
+        log(`Initiating smart contract purchase for Plasma Sword...`);
+        log(`Cost: ${cost} ${ticker}`);
+        
+        // This simulates what the developer would trigger in their game engine.
+        // Because making a real purchase requires the user's private key to sign the transaction,
+        // a real game would redirect the user to their Syrpts Wallet app to approve the transaction,
+        // or use an integrated Web3Wallet signing popup.
+        
+        log(`[ACTION REQUIRED] In a live environment, the game will now prompt the player's Syrpts Wallet to sign the following payload:`, false);
+        
+        const mockPayload = {
+            from: document.getElementById('player-wallet').value.trim(),
+            to: "nx_developer_merchant_wallet_address",
+            amount: cost,
+            type: "TRANSFER",
+            tokenSymbol: ticker,
+            timestamp: Date.now()
+        };
+
+        log(JSON.stringify(mockPayload, null, 2));
+        log(`Waiting for signature approval from Scientific Nexus Terminal...`);
+    }
+</script>
+
+</body>
+</html>
